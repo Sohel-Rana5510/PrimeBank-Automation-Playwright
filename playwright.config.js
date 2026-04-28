@@ -1,4 +1,3 @@
-// @ts-check
 import { defineConfig, devices } from '@playwright/test';
 
 /**
@@ -10,52 +9,47 @@ import { defineConfig, devices } from '@playwright/test';
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 /**
- * @see https://playwright.dev/docs/test-configuration
+ * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
+    timeout: 60000,
   testDir: './tests',
   /* Run tests in files in parallel */
   fullyParallel: true,
-  timeout : 50000, 
-
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  retries: 1,
   /* Retry on CI only */
-  
+ // retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers:1,
+  workers:  1,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
-   // baseURL: 'https://qrdev.deepmindlabs.ai/',
+     baseURL: 'https://qrdev.deepmindlabs.ai/',
     headless: false,
-    permissions: ['geolocation'],
-    actionTimeout: 20000,
-    sloMo: 1000,
-    
-    
-
+    actionTimeout: 50000,
+    // playwright.config.js
 
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
-    viewport: null, 
+    trace : 'on',
+    viewport: null,
+    permissions: ['geolocation'],
     launchOptions: {
-      // Ensure the browser starts maximized
-      args: ['--start-maximized'],
+        args: ['--start-maximized'],
+      slowMo: 500,
     },
-
   },
 
   /* Configure projects for major browsers */
   projects: [
-   {
-     name: 'chromium',
-    use: { ...devices['Desktop Chrome'] },
-    },
+    // {
+    //   name: 'chromium',
+    //   use: { ...devices['Desktop Chrome'] },
+    // },
 
     // {
     //   name: 'firefox',
@@ -82,11 +76,11 @@ export default defineConfig({
     //   name: 'Microsoft Edge',
     //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
     // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
-    ],
+    {
+      name: 'Google Chrome',
+      use: { channel: 'chrome', viewport: null },
+    },
+  ],
 
   /* Run your local dev server before starting the tests */
   // webServer: {
@@ -95,4 +89,3 @@ export default defineConfig({
   //   reuseExistingServer: !process.env.CI,
   // },
 });
-
